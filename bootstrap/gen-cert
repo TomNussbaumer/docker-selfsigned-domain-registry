@@ -1,0 +1,15 @@
+#!/bin/sh
+if [ $# -ne 2 ]; then
+   echo "USAGE: $0 <days> <subjectline>"
+   echo
+   echo "example:"
+   echo 
+   echo "$0 365 \"/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com\""
+   exit 1
+fi
+
+mkdir -p /var/lib/registry/certs 2>&1 >/dev/null
+openssl req -newkey rsa:4096 -subj "$2" \
+   -nodes -sha256 -keyout /var/lib/registry/certs/domain.key \
+   -x509 -days $1 -out /var/lib/registry/certs/domain.crt
+

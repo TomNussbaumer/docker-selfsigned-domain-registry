@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ $# -ne 2 ]; then
+  echo "USAGE: add-usr username password"
+  exit 1
+fi
+mkdir -p /var/lib/registry/auth 2>&1 > /dev/null
+htpasswd -Bbn "$1" "$2" >> /var/lib/registry/auth/htpasswd
