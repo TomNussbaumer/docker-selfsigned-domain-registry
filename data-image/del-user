@@ -1,0 +1,26 @@
+#!/bin/sh
+
+if [ $# -ne 1 ]; then
+  echo "USAGE: del-usr username"
+  exit 2
+fi
+
+AUTHFILE=/var/lib/registry/auth/htpasswd
+
+if [ -f $AUTHFILE ]; then
+  userline=$(grep "$1:" $AUTHFILE)
+  if [ -z "$userline" ]; then
+    echo "[ERROR] user [$1] doesn't exist"
+    exit 3
+  fi
+
+  # TODO: valid username (at least character ':' is not allowed)
+  # TODO: will the registry pick up the change??
+  grep -v "^$1:" ${AUTHFILE}  > ${AUTHFILE}.tmp
+  cp ${AUTHFILE}.tmp ${AUTHFILE}
+  rm ${AUTHFILE}.tmp
+  exit $?
+else
+  echo "[ERROR] authfile [$AUTHFILE]  doesn't exists"
+  exit 4
+fi

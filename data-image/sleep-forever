@@ -1,0 +1,13 @@
+#!/bin/sh
+#### no shebang here by intention
+
+log () {
+  echo "[$(date +"%F %T")] $@"
+}
+
+log "registry-data started. Hello World!"
+trap "log 'registry-data stopped. Have a nice day.'; exit" SIGHUP SIGINT SIGTERM
+
+while true; do
+  read     # NOTE: using sleep here will NOT work with trap on busybox (!??)
+done
