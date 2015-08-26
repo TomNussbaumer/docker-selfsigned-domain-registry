@@ -5,4 +5,14 @@ if [ $# -ne 2 ]; then
   exit 1
 fi
 mkdir -p /var/lib/registry/auth 2>&1 > /dev/null
-htpasswd -Bbn "$1" "$2" >> /var/lib/registry/auth/htpasswd
+
+AUTHFILE=/var/lib/registry/auth/htpasswd
+if [ -f $AUTHFILE ]; then
+  userline=$(grep "$1:" $AUTHFILE)
+  if [ -n "$userline" ]; then
+    echo "[ERROR] user [$1] alredy exists"
+    exit 1
+  fi
+fi
+
+htpasswd -Bbn "$1" "$2" | head -1 >> $AUTHFILE
