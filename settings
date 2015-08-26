@@ -1,0 +1,17 @@
+################################################################################
+#
+# MODIFY the following lines to match your requirements
+#
+################################################################################
+
+CERTIFICATE_DETAILS="/C=US/ST=Denial/L=Springfield/O=Dis/CN=example.com"
+CERTIFICATE_DAYS=365
+
+INITIAL_USER="testuser"
+INITIAL_PASSWD="testpass"
+
+######## STOP MODIFYING HERE unless really required ############################
+
+IMAGE_DATA="registry-data-image:latest"
+CONTAINER_DATA="registry-data"
+CONTAINER_REGISTRY="registry"
