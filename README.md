@@ -51,7 +51,7 @@ The certificate files will be stored in `/var/lib/registry/certs` and the author
 
 Well, there is not much to say about the automation part. It's just boring scripting. 
 
-Before you run `create-registry.sh` make sure you have modified the first 4 variables to your requirements. At least replace the "example.com" part of variable CERTIFICATE_DETAILS to match your domain name. Otherwise you will not be able to connect.
+Before you run `create-registry.sh` make sure you have modified the configuration in file `settings` to your requirements. At least replace the "example.com" part of variable CERTIFICATE_DETAILS to match your domain name. Otherwise you will not be able to connect.
 
 Changing the generated user and password is also a good idea ;)
 
@@ -68,34 +68,55 @@ The drawback of self-signed certificates is, that every Docker host requires the
 
 Restarting the docker daemon (`service docker restart`) was not even necessary on my side (docker v1.8.1).
 
+## Improvement Number 4: Utility methods
 
-## Improvement Number 4: Utility functionalities
-
-This is an incomplete list of possible (and future?) improvements:
-
-  * add another user
-  * delete a user
-  * generate a new certificate
-  * output the ca.crt File again
-  * backup and restore
-
-Beside backup, restore and delete a user the rest of the features is already there, but not nicely accessable. Here is a quick and dirty list how to do it yet:
+Script `control-registry.sh` implements various utility methods related to the registry.
 
 ```shell
-docker start registry-data
-## add a new user
-docker exec registry-data add-user the_user_name the_password
+USAGE: ./control-registry.sh command [command-options]
+       utility methods for running the registry
 
-# generate a new certificate
-docker exec registry-data gen-cert number_of_days CERTIFICATE_DETAILS_string
+commands:
 
-# output ca.crt again
-docker exec -ti registry-data output-cert > ca.crt
-docker stop registry-data
+  help                           ... print this page
+  start                          ... starts registry
+  stop                           ... stops registry
+  pause                          ... pauses registry
+  unpause                        ... unpauses registry
+  restart                        ... restarts registry to pickup changes
+  adduser <username> <password>  ... add a new authorized user
+  deluser <username>             ... delete an authorized user
+  outauth <filename>             ... outputs htpasswd file (use '-' for stdout)
+  backup  <filename>             ... backup to tarfile (use '-' for stdout)
+  restore <filename>             ... restore from tarfile (use '-' for stdin)
+  outcrt  <filename>             ... outputs certificate (use '-' for stdout)
+  setup-new-cert                 ... configures registry with new cert
+                                     this will automatically generate a new 
+                                     ca.cert file along this script
+
+## examples for backup and restore (with files or through piping)
+
+./control-registry.sh backup backup.tar      # directly writing to pipe
+./control-registry.sh backup - | tar t       # pipe it to tar to view content
+
+./control-registry.sh restore backup.tar          # restore from file
+cat backup.tar | ./control-registry.sh restore -  # restore via pip
 ```
+
+## What's missing?
+
+Feature-wise I think it's more or less complete, but it can still be, of course, improved.
+
+### Possible (and future?) improvements
+
+  1. **Move everything into containers:** Yet you'll need commandline access to the host which is nice for demonstration but doesn't really work in a cloud environment. By packaging everything into containers it would become cloud-ready.
+  2. **Access to start parameters of registry:** Yet the registry is started with hardcoded parameters. Some are required (path to certs, for example), others are just a 'good guess'. IMHO all possible start parameters should be accessible through an external configuration mechanism (file or environment variables).
+  3. **Support for a REAL certificate:** Yeah, I hear you ...
+  4. **Tests, tests, tests:** Yeap, - actually there is no test suite
+  5. **Load balancing support:** would be also a nice feature ...
+  6. **Different storage backends:** ... of course, a must have for a real solution.
 
 ## Important Notice
 
 This is in no way a production ready piece of software. It's just a proof of concept.
-
 
