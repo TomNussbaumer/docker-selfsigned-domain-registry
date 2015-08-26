@@ -1,7 +1,7 @@
 FROM alpine
-COPY add-user gen-cert output-crt /usr/local/sbin/
+COPY add-user del-user gen-cert output-crt output-auth sleep-forever /usr/local/sbin/
 RUN apk update \
  && apk add openssl \
  && apk add apache2-utils
-ENTRYPOINT ["sh"]
+ENTRYPOINT ["sleep-forever"]
 
