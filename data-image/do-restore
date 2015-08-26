@@ -1,0 +1,3 @@
+#!/bin/sh
+# USAGE: cat backup.tar | docker exec -i registry-data do-restore
+tar x -C /var/lib/registry

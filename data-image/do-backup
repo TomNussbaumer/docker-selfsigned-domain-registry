@@ -1,0 +1,3 @@
+#!/bin/sh
+# USAGE: docker exec registry-data do-backup > backup.tar
+tar c -C /var/lib/registry .
