@@ -12,4 +12,3 @@ mkdir -p /var/lib/registry/certs 2>&1 >/dev/null
 openssl req -newkey rsa:4096 -subj "$2" \
    -nodes -sha256 -keyout /var/lib/registry/certs/domain.key \
    -x509 -days $1 -out /var/lib/registry/certs/domain.crt
-

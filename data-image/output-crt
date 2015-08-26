@@ -1,3 +1,2 @@
 #!/bin/sh
 cat /var/lib/registry/certs/domain.crt
-
