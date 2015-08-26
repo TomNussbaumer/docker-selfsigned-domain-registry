@@ -1,27 +1,11 @@
 #!/bin/bash
 
-################################################################################
-#
-# MODIFY the following lines to match your requirements
-#
-################################################################################
-
-CERTIFICATE_DETAILS="/C=US/ST=Denial/L=Springfield/O=Dis/CN=example.com"
-CERTIFICATE_DAYS=365
-
-INITIAL_USER="testuser"
-INITIAL_PASSWD="testpass"
-
-######## INTERNAL ##############################################################
-
-IMAGE_DATA="registry-data-image:latest"
-CONTAINER_DATA="registry-data"
-CONTAINER_REGISTRY="registry"
+. ./settings
 
 ## build image if it doesn't exist
 docker history $IMAGE_DATA > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-  cd bootstrap
+  cd data-image
   docker build --rm -t $IMAGE_DATA .
   cd ..
   if [ $? -ne 0 ]; then
