@@ -1,5 +1,6 @@
 #!/bin/sh
 
+cd "$(readlink -f "$(dirname "$BASH_SOURCE")")"
 . ./settings
 
 read -p "[WARNING] you will LOOSE ALL CONTENT of your registry. Really proceed [y/n]? " ANSWER
